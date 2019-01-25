@@ -3,6 +3,8 @@ package com.example.androiddrinkshop;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,7 +20,9 @@ import android.widget.TextView;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.example.androiddrinkshop.Adapter.CategoryAdapter;
 import com.example.androiddrinkshop.Model.Banner;
+import com.example.androiddrinkshop.Model.Category;
 import com.example.androiddrinkshop.Retrofit.IDrinkShopAPI;
 import com.example.androiddrinkshop.Utils.Common;
 
@@ -38,6 +42,8 @@ public class HomeActivity extends AppCompatActivity
 
     IDrinkShopAPI mService;
 
+    RecyclerView lst_menu;
+
     //Rxjava
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     @Override
@@ -48,6 +54,10 @@ public class HomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mService = Common.getAPI();
+
+        lst_menu = (RecyclerView)findViewById(R.id.lst_menu);
+        lst_menu.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        lst_menu.setHasFixedSize(true);
 
         sliderLayout = (SliderLayout)findViewById(R.id.slider);
 
@@ -79,6 +89,27 @@ public class HomeActivity extends AppCompatActivity
 
         //Get banner
         getBannerImage();
+
+        //Get Menu
+        getMenu();
+    }
+
+    private void getMenu() {
+        compositeDisposable.add(mService.getMenu()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Category>>() {
+                    @Override
+                    public void accept(List<Category> categories) throws Exception {
+                        displayMenu(categories);
+                    }
+                })
+        );
+    }
+
+    private void displayMenu(List<Category> categories) {
+        CategoryAdapter adapter = new CategoryAdapter(this, categories);
+        lst_menu.setAdapter(adapter);
     }
 
     private void getBannerImage() {
