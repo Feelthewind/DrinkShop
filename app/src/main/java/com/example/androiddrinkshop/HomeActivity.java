@@ -3,6 +3,7 @@ package com.example.androiddrinkshop;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Base64;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,18 +15,41 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.example.androiddrinkshop.Model.Banner;
+import com.example.androiddrinkshop.Retrofit.IDrinkShopAPI;
 import com.example.androiddrinkshop.Utils.Common;
+
+import java.util.HashMap;
+import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView txt_name, txt_phone;
+    SliderLayout sliderLayout;
+
+    IDrinkShopAPI mService;
+
+    //Rxjava
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mService = Common.getAPI();
+
+        sliderLayout = (SliderLayout)findViewById(R.id.slider);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +76,44 @@ public class HomeActivity extends AppCompatActivity
         // Set Info
         txt_name.setText(Common.currentUser.getName());
         txt_phone.setText(Common.currentUser.getPhone());
+
+        //Get banner
+        getBannerImage();
+    }
+
+    private void getBannerImage() {
+        compositeDisposable.add(mService.getBanners()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Banner>>() {
+                    @Override
+                    public void accept(List<Banner> banners) throws Exception {
+                        displayImage(banners);
+                    }
+                })
+        );
+    }
+
+    @Override
+    protected void onDestroy() {
+        compositeDisposable.dispose();
+        super.onDestroy();
+    }
+
+    private void displayImage(List<Banner> banners) {
+        HashMap<String,String> bannerMap = new HashMap<>();
+        for(Banner item:banners)
+            bannerMap.put(item.getName(), item.getLink());
+
+        for(String name:bannerMap.keySet())
+        {
+            TextSliderView textSliderView = new TextSliderView(this);
+            textSliderView.description(name)
+                    .image(bannerMap.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit);
+
+            sliderLayout.addSlider(textSliderView);
+        }
     }
 
     @Override

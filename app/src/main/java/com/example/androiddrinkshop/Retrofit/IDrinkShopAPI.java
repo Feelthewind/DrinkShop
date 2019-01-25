@@ -1,11 +1,16 @@
 package com.example.androiddrinkshop.Retrofit;
 
+import com.example.androiddrinkshop.Model.Banner;
 import com.example.androiddrinkshop.Model.CheckUserResponse;
 import com.example.androiddrinkshop.Model.User;
+
+import java.util.List;
+import io.reactivex.Observable;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface IDrinkShopAPI {
@@ -23,4 +28,7 @@ public interface IDrinkShopAPI {
     @FormUrlEncoded
     @POST("getuser.php")
     Call<User> getUserInformation(@Field("phone") String phone);
+
+    @GET("getbanner.php")
+    Observable<List<Banner>> getBanners();
 }
