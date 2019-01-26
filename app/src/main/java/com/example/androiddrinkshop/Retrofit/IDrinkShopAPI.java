@@ -3,6 +3,7 @@ package com.example.androiddrinkshop.Retrofit;
 import com.example.androiddrinkshop.Model.Banner;
 import com.example.androiddrinkshop.Model.Category;
 import com.example.androiddrinkshop.Model.CheckUserResponse;
+import com.example.androiddrinkshop.Model.Drink;
 import com.example.androiddrinkshop.Model.User;
 
 import java.util.List;
@@ -35,4 +36,8 @@ public interface IDrinkShopAPI {
 
     @GET("getmenu.php")
     Observable<List<Category>> getMenu();
+
+    @FormUrlEncoded
+    @POST("getdrink.php")
+    Observable<List<Drink>> getDrink(@Field("menuid") String menuID);
 }
