@@ -1,5 +1,7 @@
 package com.example.androiddrinkshop.Utils;
 
+import com.example.androiddrinkshop.Database.DataSource.CartRepository;
+import com.example.androiddrinkshop.Database.Local.CartDatabase;
 import com.example.androiddrinkshop.Model.Category;
 import com.example.androiddrinkshop.Model.Drink;
 import com.example.androiddrinkshop.Model.User;
@@ -32,4 +34,8 @@ public class Common {
     {
         return RetrofitClient.getClient(BASE_URL).create(IDrinkShopAPI.class);
     }
+
+    //Database
+    public static CartDatabase cartDatabase;
+    public static CartRepository cartRepository;
 }

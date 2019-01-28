@@ -21,6 +21,9 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.example.androiddrinkshop.Adapter.CategoryAdapter;
+import com.example.androiddrinkshop.Database.DataSource.CartRepository;
+import com.example.androiddrinkshop.Database.Local.CartDataSource;
+import com.example.androiddrinkshop.Database.Local.CartDatabase;
 import com.example.androiddrinkshop.Model.Banner;
 import com.example.androiddrinkshop.Model.Category;
 import com.example.androiddrinkshop.Model.Drink;
@@ -96,6 +99,14 @@ public class HomeActivity extends AppCompatActivity
 
         //Save newest Topping List
         getToppingList();
+
+        //Init Database
+        initDB();
+    }
+
+    private void initDB() {
+        Common.cartDatabase = CartDatabase.getInstance(this);
+        Common.cartRepository = CartRepository.getInstance(CartDataSource.getInstance(Common.cartDatabase.cartDAO()));
     }
 
     private void getToppingList() {

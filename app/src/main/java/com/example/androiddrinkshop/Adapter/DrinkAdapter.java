@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.example.androiddrinkshop.Database.ModelDB.Cart;
 import com.example.androiddrinkshop.Interface.IItemClickListener;
 import com.example.androiddrinkshop.Model.Drink;
 import com.example.androiddrinkshop.R;
 import com.example.androiddrinkshop.Utils.Common;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -227,7 +230,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                     return;
                 }
                 
-                showConfirmDialog(position, txt_count.getNumber(), Common.sizeOfCup, Common.sugar, Common.ice);
+                showConfirmDialog(position, txt_count.getNumber());
                 dialog.dismiss();
             }
         });
@@ -235,18 +238,18 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         builder.show();
     }
 
-    private void showConfirmDialog(int position, String number, int sizeOfCup, int sugar, int ice) {
+    private void showConfirmDialog(int position, final String number) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View itemView = LayoutInflater.from(context)
                 .inflate(R.layout.confirm_add_to_cart_layout, null);
 
         //View
         ImageView img_product_dialog = (ImageView)itemView.findViewById(R.id.img_product);
-        TextView txt_cart_product_name = (TextView)itemView.findViewById(R.id.txt_cart_product_name);
+        final TextView txt_cart_product_name = (TextView)itemView.findViewById(R.id.txt_cart_product_name);
         TextView txt_cart_product_price = (TextView)itemView.findViewById(R.id.txt_cart_product_price);
         TextView txt_sugar = (TextView)itemView.findViewById(R.id.txt_sugar);
         TextView txt_ice = (TextView)itemView.findViewById(R.id.txt_ice);
-        TextView txt_topping_extra = (TextView)itemView.findViewById(R.id.txt_topping_extra);
+        final TextView txt_topping_extra = (TextView)itemView.findViewById(R.id.txt_topping_extra);
 
         //Set data
         Picasso.with(context).load(drinkList.get(position).getLink()).into(img_product_dialog);
@@ -270,12 +273,35 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
 
         txt_topping_extra.setText(topping_final_comment);
 
+        final double finalPrice = price;
         builder.setNegativeButton("CONFIRM", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Add to SQLite
-                //Implement later in next part
+
                 dialog.dismiss();
+
+                try {
+                    //Add to SQLite
+                    //Implement later in next part
+                    Cart cartItem = new Cart();
+                    cartItem.name = txt_cart_product_name.getText().toString();
+                    cartItem.amount = Integer.parseInt(number);
+                    cartItem.ice = Common.ice;
+                    cartItem.sugar = Common.sugar;
+                    cartItem.price = finalPrice;
+                    cartItem.toppingExtras = txt_topping_extra.getText().toString();
+
+                    //Add to DB
+                    Common.cartRepository.insertToCart(cartItem);
+
+                    Log.d("EDMT_DEBUG", new Gson().toJson(cartItem));
+
+                    Toast.makeText(context, "Saving item to cart succeed", Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception ex)
+                {
+                    Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
