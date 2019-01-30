@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.androiddrinkshop.Database.ModelDB.Favorite;
@@ -44,16 +46,36 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         return favoriteList.size();
     }
 
-    class FavoriteViewHolder extends RecyclerView.ViewHolder
+    public class FavoriteViewHolder extends RecyclerView.ViewHolder
     {
         ImageView img_product;
         TextView txt_product_name, txt_price;
+
+        public RelativeLayout view_background;
+        public LinearLayout view_foreground;
 
         public FavoriteViewHolder(View itemView) {
             super(itemView);
             img_product = (ImageView)itemView.findViewById(R.id.img_product);
             txt_product_name = (TextView)itemView.findViewById(R.id.txt_product_name);
             txt_price = (TextView)itemView.findViewById(R.id.txt_price);
+
+            view_background = (RelativeLayout)itemView.findViewById(R.id.view_background);
+            view_foreground = (LinearLayout)itemView.findViewById(R.id.view_foreground);
+
+
         }
+    }
+
+    public void removeItem(int position)
+    {
+        favoriteList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(Favorite item, int position)
+    {
+        favoriteList.add(position, item);
+        notifyItemInserted(position);
     }
 }
