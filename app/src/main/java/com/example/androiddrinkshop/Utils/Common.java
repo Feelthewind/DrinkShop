@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Common {
     // In Emulator, localhost = 10.0.2.2
-    private static final String BASE_URL = "http://10.0.2.2/drinkshop/";
+    public static final String BASE_URL = "http://10.0.2.2/drinkshop/";
 
     public static final String TOPPING_MENU_ID = "7";
 
