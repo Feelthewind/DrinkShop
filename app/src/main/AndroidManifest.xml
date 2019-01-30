@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CartActivity"></activity>
+        <activity android:name=".FavoriteListActivity"></activity>
+        <activity android:name=".CartActivity" />
         <activity android:name=".DrinkActivity" />
         <activity
             android:name=".HomeActivity"

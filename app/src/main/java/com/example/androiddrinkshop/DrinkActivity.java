@@ -63,23 +63,8 @@ public class DrinkActivity extends AppCompatActivity {
         lst_drink.setAdapter(adapter);
     }
 
-    //Exit Application when click BACK button
-    boolean isBackButtonClicked = false;
-
-    @Override
-    public void onBackPressed() {
-        if(isBackButtonClicked)
-        {
-            super.onBackPressed();
-            return;
-        }
-        this.isBackButtonClicked = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        isBackButtonClicked = false;
     }
 }

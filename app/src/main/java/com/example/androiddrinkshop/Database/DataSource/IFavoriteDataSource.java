@@ -13,5 +13,7 @@ public interface IFavoriteDataSource {
 
     int isFavorite(int itemId);
 
+    void insertFav(Favorite...favorites);
+
     void delete(Favorite favorite);
 }
