@@ -1,7 +1,8 @@
 package com.example.androiddrinkshop.Utils;
 
 import com.example.androiddrinkshop.Database.DataSource.CartRepository;
-import com.example.androiddrinkshop.Database.Local.CartDatabase;
+import com.example.androiddrinkshop.Database.DataSource.FavoriteRepository;
+import com.example.androiddrinkshop.Database.Local.EDMTRoomDatabase;
 import com.example.androiddrinkshop.Model.Category;
 import com.example.androiddrinkshop.Model.Drink;
 import com.example.androiddrinkshop.Model.User;
@@ -36,6 +37,7 @@ public class Common {
     }
 
     //Database
-    public static CartDatabase cartDatabase;
+    public static EDMTRoomDatabase edmtRoomDatabase;
     public static CartRepository cartRepository;
+    public static FavoriteRepository favoriteRepository;
 }

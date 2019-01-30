@@ -31,8 +31,10 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.example.androiddrinkshop.Adapter.CategoryAdapter;
 import com.example.androiddrinkshop.Database.DataSource.CartRepository;
+import com.example.androiddrinkshop.Database.DataSource.FavoriteRepository;
 import com.example.androiddrinkshop.Database.Local.CartDataSource;
-import com.example.androiddrinkshop.Database.Local.CartDatabase;
+import com.example.androiddrinkshop.Database.Local.EDMTRoomDatabase;
+import com.example.androiddrinkshop.Database.Local.FavoriteDataSource;
 import com.example.androiddrinkshop.Model.Banner;
 import com.example.androiddrinkshop.Model.Category;
 import com.example.androiddrinkshop.Model.Drink;
@@ -213,8 +215,9 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void initDB() {
-        Common.cartDatabase = CartDatabase.getInstance(this);
-        Common.cartRepository = CartRepository.getInstance(CartDataSource.getInstance(Common.cartDatabase.cartDAO()));
+        Common.edmtRoomDatabase = EDMTRoomDatabase.getInstance(this);
+        Common.cartRepository = CartRepository.getInstance(CartDataSource.getInstance(Common.edmtRoomDatabase.cartDAO()));
+        Common.favoriteRepository = FavoriteRepository.getInstance(FavoriteDataSource.getInstance(Common.edmtRoomDatabase.favoriteDAO()));
     }
 
     private void getToppingList() {
