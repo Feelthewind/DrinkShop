@@ -11,4 +11,11 @@
         app:actionLayout="@layout/action_bar_notification_icon"/>
         />
 
+    <item
+        android:id="@+id/search_menu"
+        android:title="Cart"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:showAsAction="always" />
+    />
+
 </menu>

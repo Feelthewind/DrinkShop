@@ -88,10 +88,10 @@ public class FavoriteListActivity extends AppCompatActivity implements RecyclerI
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if(viewHolder instanceof FavoriteAdapter.FavoriteViewHolder)
         {
-            String name = localFavorites.get(viewHolder.getAdapterPosition()).name;
+            String name = localFavorites.get(position).name;
 
-            final Favorite deletedItem = localFavorites.get(viewHolder.getAdapterPosition());
-            final int deletedIndex = viewHolder.getAdapterPosition();
+            final Favorite deletedItem = localFavorites.get(position);
+            final int deletedIndex = position;
 
             //Delete item from adapter
             favoriteAdapter.removeItem(deletedIndex);
