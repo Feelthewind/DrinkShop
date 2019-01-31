@@ -47,4 +47,22 @@ public class Common {
     public static EDMTRoomDatabase edmtRoomDatabase;
     public static CartRepository cartRepository;
     public static FavoriteRepository favoriteRepository;
+
+    public static String convertCodeToStatus(int orderStatus) {
+        switch (orderStatus)
+        {
+            case 0:
+                return "Placed";
+            case 1:
+                return "Processing";
+            case 2:
+                return "Shipping";
+            case 3:
+                return "Shipped";
+            case -1:
+                return "Cancelled";
+                default:
+                    return "Order Error";
+        }
+    }
 }

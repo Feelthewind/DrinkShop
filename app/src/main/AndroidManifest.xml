@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".ShowOrderActivity"></activity>
+        <activity android:name=".SearchActivity" />
         <activity android:name=".FavoriteListActivity" />
         <activity android:name=".CartActivity" />
         <activity android:name=".DrinkActivity" />
@@ -21,13 +22,11 @@
             android:name=".HomeActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <meta-data
@@ -41,9 +40,7 @@
             android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN" />
 
         <activity android:name="com.facebook.accountkit.ui.AccountKitActivity" />
-        <activity android:name=".MainActivity">
-
-        </activity>
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>
