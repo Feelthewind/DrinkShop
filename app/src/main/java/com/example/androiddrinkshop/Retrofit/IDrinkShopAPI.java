@@ -58,4 +58,9 @@ public interface IDrinkShopAPI {
                                         @Field("comment") String comment,
                                         @Field("address") String address,
                                         @Field("phone") String phone);
+
+    @FormUrlEncoded
+    @POST("braintree/checkout.php")
+    Call<String> payment(@Field("nonce") String nonce,
+                         @Field("amount") String amount);
 }

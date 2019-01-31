@@ -8,6 +8,7 @@ import com.example.androiddrinkshop.Model.Drink;
 import com.example.androiddrinkshop.Model.User;
 import com.example.androiddrinkshop.Retrofit.IDrinkShopAPI;
 import com.example.androiddrinkshop.Retrofit.RetrofitClient;
+import com.example.androiddrinkshop.Retrofit.RetrofitScalarsClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 public class Common {
     // In Emulator, localhost = 10.0.2.2
     public static final String BASE_URL = "http://10.0.2.2/drinkshop/";
+    public static final String API_TOKEN_URL = "http://10.0.2.2/drinkshop/braintree/main.php";
 
     public static final String TOPPING_MENU_ID = "7";
 
@@ -34,6 +36,11 @@ public class Common {
     public static IDrinkShopAPI getAPI()
     {
         return RetrofitClient.getClient(BASE_URL).create(IDrinkShopAPI.class);
+    }
+
+    public static IDrinkShopAPI getScalarAPI()
+    {
+        return RetrofitScalarsClient.getScalarsClient(BASE_URL).create(IDrinkShopAPI.class);
     }
 
     //Database

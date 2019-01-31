@@ -69,7 +69,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
                 Common.cartRepository.updateCart(cart);
 
-                holder.txt_price.setText(new StringBuilder("$").append(cartList.get(position).price));
+                holder.txt_price.setText(new StringBuilder("$").append(cart.price));
             }
         });
     }
