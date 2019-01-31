@@ -292,8 +292,8 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         //Set data
         Picasso.with(context).load(drinkList.get(position).getLink()).into(img_product_dialog);
         txt_cart_product_name.setText(new StringBuilder(drinkList.get(position).getName()).append(" x")
-        .append(number)
-        .append(Common.sizeOfCup == 0 ? " Size M" : "Size L").toString());
+        .append(Common.sizeOfCup == 0 ? " Size M" : "Size L")
+        .append(number).toString());
 
         txt_ice.setText(new StringBuilder("Ice: ").append(Common.ice).append("%").toString());
         txt_sugar.setText(new StringBuilder("Sugar: ").append(Common.sugar).append("%").toString());
@@ -301,9 +301,8 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         double price = (Double.parseDouble(drinkList.get(position).getPrice()) * Double.parseDouble(number)) + Common.toppingPrice;
 
         if(Common.sizeOfCup == 1)
-            price += 3.0;
+            price += (3.0*Double.parseDouble(number));
 
-        txt_cart_product_price.setText(new StringBuilder("$").append(price));
 
         StringBuilder topping_final_comment = new StringBuilder("");
         for(String line:Common.toppingAdded)
@@ -311,7 +310,10 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
 
         txt_topping_extra.setText(topping_final_comment);
 
-        final double finalPrice = price;
+        final double finalPrice = Math.round(price);
+
+        txt_cart_product_price.setText(new StringBuilder("$").append(finalPrice));
+
         builder.setNegativeButton("CONFIRM", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -322,11 +324,12 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                     //Add to SQLite
                     //Implement later in next part
                     Cart cartItem = new Cart();
-                    cartItem.name = txt_cart_product_name.getText().toString();
+                    cartItem.name = drinkList.get(position).getName();
                     cartItem.amount = Integer.parseInt(number);
                     cartItem.ice = Common.ice;
                     cartItem.sugar = Common.sugar;
                     cartItem.price = finalPrice;
+                    cartItem.size = Common.sizeOfCup;
                     cartItem.toppingExtras = txt_topping_extra.getText().toString();
                     cartItem.link = drinkList.get(position).getLink();
 

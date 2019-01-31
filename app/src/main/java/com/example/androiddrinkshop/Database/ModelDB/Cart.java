@@ -32,6 +32,9 @@ public class Cart {
     @ColumnInfo(name="ice")
     public int ice;
 
+    @ColumnInfo(name="size")
+    public int size;
+
     @ColumnInfo(name="toppingExtras")
     public String toppingExtras;
 }
