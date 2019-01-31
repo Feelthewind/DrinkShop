@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -37,12 +38,17 @@ import com.example.androiddrinkshop.Database.Local.EDMTRoomDatabase;
 import com.example.androiddrinkshop.Database.Local.FavoriteDataSource;
 import com.example.androiddrinkshop.Model.Banner;
 import com.example.androiddrinkshop.Model.Category;
+import com.example.androiddrinkshop.Model.CheckUserResponse;
 import com.example.androiddrinkshop.Model.Drink;
+import com.example.androiddrinkshop.Model.User;
 import com.example.androiddrinkshop.Retrofit.IDrinkShopAPI;
 import com.example.androiddrinkshop.Utils.Common;
 import com.example.androiddrinkshop.Utils.ProgressRequestBody;
 import com.example.androiddrinkshop.Utils.UploadCallBack;
+import com.facebook.accountkit.Account;
 import com.facebook.accountkit.AccountKit;
+import com.facebook.accountkit.AccountKitCallback;
+import com.facebook.accountkit.AccountKitError;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.nex3z.notificationbadge.NotificationBadge;
 import com.squareup.picasso.Picasso;
@@ -52,6 +58,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import dmax.dialog.SpotsDialog;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -123,22 +130,26 @@ public class HomeActivity extends AppCompatActivity
         img_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseImage();
+                if(Common.currentUser != null)
+                    chooseImage();
             }
         });
 
-        // Set Info
-        txt_name.setText(Common.currentUser.getName());
-        txt_phone.setText(Common.currentUser.getPhone());
-
-        //Set avatar
-        if(!TextUtils.isEmpty(Common.currentUser.getAvatarUrl()))
+        if(Common.currentUser != null) // If we not login, ofcourse Common.currentUser is null
         {
-            Picasso.with(this)
-                    .load(new StringBuilder(Common.BASE_URL)
-                            .append("user_avatar/")
-                            .append(Common.currentUser.getAvatarUrl()).toString())
-                    .into(img_avatar);
+            // Set Info
+            txt_name.setText(Common.currentUser.getName());
+            txt_phone.setText(Common.currentUser.getPhone());
+
+            //Set avatar
+            if(!TextUtils.isEmpty(Common.currentUser.getAvatarUrl()))
+            {
+                Picasso.with(this)
+                        .load(new StringBuilder(Common.BASE_URL)
+                                .append("user_avatar/")
+                                .append(Common.currentUser.getAvatarUrl()).toString())
+                        .into(img_avatar);
+            }
         }
 
         //Get banner
@@ -152,6 +163,65 @@ public class HomeActivity extends AppCompatActivity
 
         //Init Database
         initDB();
+
+        checkSessionLogin(); // If user already logged, just login again (Session still live)
+    }
+
+    private void checkSessionLogin() {
+        if(AccountKit.getCurrentAccessToken() != null)
+        {
+            final AlertDialog dialog = new SpotsDialog(HomeActivity.this);
+            dialog.show();
+            dialog.setMessage("Please waiting...");
+
+            //Check exists user on Server (MySQL)
+            AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
+                @Override
+                public void onSuccess(final Account account) {
+                    mService.checkUserExists(account.getPhoneNumber().toString())
+                            .enqueue(new Callback<CheckUserResponse>() {
+                                @Override
+                                public void onResponse(Call<CheckUserResponse> call, Response<CheckUserResponse> response) {
+                                    CheckUserResponse userResponse = response.body();
+                                    if(userResponse.isExists())
+                                    {
+                                        mService.getUserInformation(account.getPhoneNumber().toString())
+                                                .enqueue(new Callback<User>() {
+                                                    @Override
+                                                    public void onResponse(Call<User> call, Response<User> response) {
+                                                        Common.currentUser = response.body();
+                                                        if(Common.currentUser != null)
+                                                            dialog.dismiss();
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<User> call, Throwable t) {
+                                                        dialog.dismiss();
+                                                        Log.d("ERROR", t.getMessage());
+                                                    }
+                                                });
+                                    }
+                                    else
+                                    {
+                                        //If user not exists on Database, just make login
+                                        startActivity(new Intent(HomeActivity.this, MainActivity.class));
+                                        finish();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<CheckUserResponse> call, Throwable t) {
+                                    Log.d("ERROR", t.getMessage());
+                                }
+                            });
+                }
+
+                @Override
+                public void onError(AccountKitError accountKitError) {
+                    Log.d("ERROR", accountKitError.getErrorType().getMessage());
+                }
+            });
+        }
     }
 
     private void chooseImage() {
