@@ -1,9 +1,12 @@
 package com.example.androiddrinkshop;
 
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.androiddrinkshop.Adapter.OrderAdapter;
@@ -23,6 +26,7 @@ public class ShowOrderActivity extends AppCompatActivity {
     IDrinkShopAPI mService;
     RecyclerView recycler_orders;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +39,40 @@ public class ShowOrderActivity extends AppCompatActivity {
         recycler_orders.setLayoutManager(new LinearLayoutManager(this));
         recycler_orders.setHasFixedSize(true);
 
-        loadOrder();
+        bottomNavigationView = (BottomNavigationView)findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                if(menuItem.getItemId() == R.id.order_new)
+                {
+                    loadOrder("0");
+                }
+                else if(menuItem.getItemId() == R.id.order_cancel)
+                {
+                    loadOrder("-1");
+                }
+                else if(menuItem.getItemId() == R.id.order_processing)
+                {
+                    loadOrder("1");
+                }
+                else if(menuItem.getItemId() == R.id.order_shipping)
+                {
+                    loadOrder("2");
+                }
+                else if(menuItem.getItemId() == R.id.order_shipped)
+                {
+                    loadOrder("3");
+                }
+                return true;
+            }
+        });
+
+        loadOrder("0");
     }
 
-    private void loadOrder() {
+    private void loadOrder(String statusCode) {
         if(Common.currentUser != null) {
-            compositeDisposable.add(mService.getOrder(Common.currentUser.getPhone(), "0")
+            compositeDisposable.add(mService.getOrder(Common.currentUser.getPhone(), statusCode)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(new Consumer<List<Order>>() {
@@ -65,7 +97,7 @@ public class ShowOrderActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadOrder();
+        loadOrder("0");
     }
 
     @Override
