@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.szagurskii:patternedtextwatcher:0.5.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/patternedtextwatcher-0.5.0.aar/4ef98076508d4f308430bf51b4340067/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/patternedtextwatcher-0.5.0.aar/4ef98076508d4f308430bf51b4340067/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/patternedtextwatcher-0.5.0.aar/68ede64d9e722d94d907d1a5c415ed37/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/patternedtextwatcher-0.5.0.aar/68ede64d9e722d94d907d1a5c415ed37/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

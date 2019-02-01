@@ -31,6 +31,7 @@ import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.szagurskii.patternedtextwatcher.PatternedTextWatcher;
 
@@ -114,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
                                                         alertDialog.dismiss();
 
                                                         Common.currentUser = response.body();
+
+                                                        updateTokenToServer();
 
                                                         startActivity(new Intent(MainActivity.this, HomeActivity.class));
                                                         finish(); // Close MainActivity
@@ -205,6 +208,8 @@ public class MainActivity extends AppCompatActivity {
                                                                 alertDialog.dismiss();
 
                                                                 Common.currentUser = response.body();
+
+                                                                updateTokenToServer();
 
                                                                 startActivity(new Intent(MainActivity.this, HomeActivity.class));
                                                                 finish(); // Close MainActivity
@@ -301,6 +306,9 @@ public class MainActivity extends AppCompatActivity {
                                 {
                                     Toast.makeText(MainActivity.this, "User register successfully", Toast.LENGTH_SHORT).show();
                                     Common.currentUser = response.body();
+
+                                    updateTokenToServer();
+
                                     // Start new activity
                                     startActivity(new Intent(MainActivity.this, HomeActivity.class));
                                     finish();
@@ -356,5 +364,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         isBackButtonClicked = false;
         super.onResume();
+    }
+
+    private void updateTokenToServer() {
+        IDrinkShopAPI mService = Common.getAPI();
+        mService.updateToken(Common.currentUser.getPhone(), FirebaseInstanceId.getInstance().getToken(), "0")
+                .enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        Log.d("LCS_DEBUG", response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.d("LCS_DEBUG", t.getMessage());
+                    }
+                });
+
     }
 }
