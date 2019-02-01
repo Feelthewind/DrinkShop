@@ -5,6 +5,7 @@ import com.example.androiddrinkshop.Database.DataSource.FavoriteRepository;
 import com.example.androiddrinkshop.Database.Local.EDMTRoomDatabase;
 import com.example.androiddrinkshop.Model.Category;
 import com.example.androiddrinkshop.Model.Drink;
+import com.example.androiddrinkshop.Model.Order;
 import com.example.androiddrinkshop.Model.User;
 import com.example.androiddrinkshop.Retrofit.IDrinkShopAPI;
 import com.example.androiddrinkshop.Retrofit.RetrofitClient;
@@ -22,6 +23,7 @@ public class Common {
 
     public static User currentUser = null;
     public static Category currentCategory = null;
+    public static Order currentOrder = null;
 
     public static List<Drink> toppingList = new ArrayList<>();
 
