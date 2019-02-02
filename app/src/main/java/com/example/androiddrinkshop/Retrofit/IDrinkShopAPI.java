@@ -5,6 +5,8 @@ import com.example.androiddrinkshop.Model.Category;
 import com.example.androiddrinkshop.Model.CheckUserResponse;
 import com.example.androiddrinkshop.Model.Drink;
 import com.example.androiddrinkshop.Model.Order;
+import com.example.androiddrinkshop.Model.OrderResult;
+import com.example.androiddrinkshop.Model.Token;
 import com.example.androiddrinkshop.Model.User;
 
 import java.util.List;
@@ -54,11 +56,11 @@ public interface IDrinkShopAPI {
 
     @FormUrlEncoded
     @POST("submitorder.php")
-    Call<String> submitOrder(@Field("price") float orderPrice,
-                                        @Field("orderDetail") String orderDetail,
-                                        @Field("comment") String comment,
-                                        @Field("address") String address,
-                                        @Field("phone") String phone);
+    Call<OrderResult> submitOrder(@Field("price") float orderPrice,
+                                  @Field("orderDetail") String orderDetail,
+                                  @Field("comment") String comment,
+                                  @Field("address") String address,
+                                  @Field("phone") String phone);
 
     @FormUrlEncoded
     @POST("braintree/checkout.php")
@@ -80,4 +82,9 @@ public interface IDrinkShopAPI {
     @POST("cancelorder.php")
     Call<String> cancelOrder(@Field("orderId") String orderId,
                              @Field("userPhone") String userPhone);
+
+    @FormUrlEncoded
+    @POST("gettoken.php")
+    Call<Token> getToken(@Field("phone") String phone,
+                            @Field("isServerToken") String isServerToken);
 }

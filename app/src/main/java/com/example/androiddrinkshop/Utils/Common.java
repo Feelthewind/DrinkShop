@@ -7,7 +7,9 @@ import com.example.androiddrinkshop.Model.Category;
 import com.example.androiddrinkshop.Model.Drink;
 import com.example.androiddrinkshop.Model.Order;
 import com.example.androiddrinkshop.Model.User;
+import com.example.androiddrinkshop.Retrofit.FCMClient;
 import com.example.androiddrinkshop.Retrofit.IDrinkShopAPI;
+import com.example.androiddrinkshop.Retrofit.IFCMService;
 import com.example.androiddrinkshop.Retrofit.RetrofitClient;
 import com.example.androiddrinkshop.Retrofit.RetrofitScalarsClient;
 
@@ -49,6 +51,13 @@ public class Common {
     public static EDMTRoomDatabase edmtRoomDatabase;
     public static CartRepository cartRepository;
     public static FavoriteRepository favoriteRepository;
+
+    private static final String FCM_API = "https://fcm.googleapis.com/";
+
+    public static IFCMService getFCMService()
+    {
+        return FCMClient.getClient(FCM_API).create(IFCMService.class);
+    }
 
     public static String convertCodeToStatus(int orderStatus) {
         switch (orderStatus)
